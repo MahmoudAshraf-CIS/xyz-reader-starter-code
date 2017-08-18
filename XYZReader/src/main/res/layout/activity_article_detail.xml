@@ -1,5 +1,6 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:background="@color/ltgray"
     android:layout_height="match_parent">
 
     <android.support.v4.view.ViewPager
@@ -11,7 +12,9 @@
         android:id="@+id/up_container"
         android:background="@android:color/transparent"
         android:layout_width="match_parent"
-        android:layout_height="?actionBarSize">
+        android:layout_height="?actionBarSize"
+        android:elevation="8dp"
+        >
 
         <ImageButton
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"

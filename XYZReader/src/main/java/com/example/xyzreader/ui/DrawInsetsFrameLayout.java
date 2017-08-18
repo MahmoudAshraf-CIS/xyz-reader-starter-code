@@ -103,11 +103,14 @@ public class DrawInsetsFrameLayout extends FrameLayout {
     @Override
     public WindowInsets onApplyWindowInsets(WindowInsets insets) {
         insets = super.onApplyWindowInsets(insets);
+        //// TODO: 8/17/2017
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
         mInsets = new Rect(
                 insets.getSystemWindowInsetLeft(),
                 insets.getSystemWindowInsetTop(),
                 insets.getSystemWindowInsetRight(),
                 insets.getSystemWindowInsetBottom());
+
         setWillNotDraw(false);
         postInvalidateOnAnimation();
         if (mOnInsetsCallback != null) {
