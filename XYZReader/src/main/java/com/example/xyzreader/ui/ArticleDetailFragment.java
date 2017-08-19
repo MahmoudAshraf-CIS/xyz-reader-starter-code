@@ -33,6 +33,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
+import com.squareup.picasso.Picasso;
 
 /**
  * A fragment representing a single Article detail screen. This fragment is
@@ -114,7 +115,7 @@ public class ArticleDetailFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_article_detail2, container, false);
         mDrawInsetsFrameLayout = (DrawInsetsFrameLayout)
                 mRootView.findViewById(R.id.draw_insets_frame_layout);
         mDrawInsetsFrameLayout.setOnInsetsCallback(new DrawInsetsFrameLayout.OnInsetsCallback() {
@@ -135,7 +136,6 @@ public class ArticleDetailFragment extends Fragment implements
             }
         });
 
-        mPhotoView = (ImageView) mRootView.findViewById(R.id.photo);
         mPhotoContainerView = mRootView.findViewById(R.id.photo_container);
 
         mStatusBarColorDrawable = new ColorDrawable(0);
@@ -196,6 +196,7 @@ public class ArticleDetailFragment extends Fragment implements
     }
 
     private void bindViews() {
+
         if (mRootView == null) {
             return;
         }
@@ -204,6 +205,7 @@ public class ArticleDetailFragment extends Fragment implements
         TextView bylineView = (TextView) mRootView.findViewById(R.id.article_byline);
         bylineView.setMovementMethod(new LinkMovementMethod());
         TextView bodyView = (TextView) mRootView.findViewById(R.id.article_body);
+        mPhotoView = (ImageView) mRootView.findViewById(R.id.photo);
 
 
         bodyView.setTypeface(Typeface.createFromAsset(getResources().getAssets(), "Rosario-Regular.ttf"));
@@ -226,38 +228,47 @@ public class ArticleDetailFragment extends Fragment implements
 
             } else {
                 // If date is before 1902, just show the string
-                bylineView.setText(Html.fromHtml(
+                bylineView.setText(
+                        Html.fromHtml(
                         outputFormat.format(publishedDate) + " by <font color='#ffffff'>"
                         + mCursor.getString(ArticleLoader.Query.AUTHOR)
                                 + "</font>"));
 
             }
+            String url = mCursor.getString(ArticleLoader.Query.THUMB_URL);
+            Picasso.with(this.getActivity()).load( url).placeholder(R.drawable.loading).error(R.drawable.error)
+                    .into(mPhotoView);
+
+
             bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />")));
-            ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
-                    .get(mCursor.getString(ArticleLoader.Query.PHOTO_URL), new ImageLoader.ImageListener() {
-                        @Override
-                        public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
-                            Bitmap bitmap = imageContainer.getBitmap();
-                            if (bitmap != null) {
-                                Palette p = Palette.generate(bitmap, 12);
-                                mMutedColor = p.getDarkMutedColor(0xFF333333);
-                                mPhotoView.setImageBitmap(imageContainer.getBitmap());
-                                mRootView.findViewById(R.id.meta_bar)
-                                        .setBackgroundColor(mMutedColor);
-                                updateStatusBar();
-                            }
-                        }
 
-                        @Override
-                        public void onErrorResponse(VolleyError volleyError) {
-
-                        }
-                    });
+//            ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
+//                    .get(mCursor.getString(ArticleLoader.Query.PHOTO_URL), new ImageLoader.ImageListener() {
+//                        @Override
+//                        public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
+//                            Bitmap bitmap = imageContainer.getBitmap();
+//                            if (bitmap != null) {
+//                                Palette p = Palette.generate(bitmap, 12);
+//                                mMutedColor = p.getDarkMutedColor(0xFF333333);
+//                                mPhotoView.setImageBitmap(imageContainer.getBitmap());
+//                                mRootView.findViewById(R.id.meta_bar)
+//                                        .setBackgroundColor(mMutedColor);
+//                                updateStatusBar();
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onErrorResponse(VolleyError volleyError) {
+//
+//                        }
+//                    });
+            String t ="";
         } else {
             mRootView.setVisibility(View.GONE);
             titleView.setText("N/A");
             bylineView.setText("N/A" );
             bodyView.setText("N/A");
+
         }
     }
 
