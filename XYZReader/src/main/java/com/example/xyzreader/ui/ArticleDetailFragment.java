@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.graphics.Palette;
@@ -34,6 +35,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 /**
  * A fragment representing a single Article detail screen. This fragment is
@@ -115,7 +117,7 @@ public class ArticleDetailFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        mRootView = inflater.inflate(R.layout.fragment_article_detail2, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
         mDrawInsetsFrameLayout = (DrawInsetsFrameLayout)
                 mRootView.findViewById(R.id.draw_insets_frame_layout);
         mDrawInsetsFrameLayout.setOnInsetsCallback(new DrawInsetsFrameLayout.OnInsetsCallback() {
@@ -237,7 +239,33 @@ public class ArticleDetailFragment extends Fragment implements
             }
             String url = mCursor.getString(ArticleLoader.Query.THUMB_URL);
             Picasso.with(this.getActivity()).load( url).placeholder(R.drawable.loading).error(R.drawable.error)
-                    .into(mPhotoView);
+                    .into( mPhotoView);
+
+//            Picasso.with(this.getActivity()).load( url).placeholder(R.drawable.loading).error(R.drawable.error)
+//                    .into(new Target() {
+//                        @Override
+//                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+//                            assert mPhotoView != null;
+//                            mPhotoView.setImageBitmap(bitmap);
+//                            Palette.from(bitmap)
+//                                    .generate(new Palette.PaletteAsyncListener() {
+//                                        @Override
+//                                        public void onGenerated(Palette palette) {
+//                                            Palette.Swatch textSwatch = palette.getVibrantSwatch();
+//                                            if (textSwatch == null) {
+//                                                return;
+//                                            }
+//                                            mMutedColor = textSwatch.getRgb();
+//                                            mRootView.findViewById(R.id.meta_bar).setBackgroundColor(mMutedColor);
+//                                            updateStatusBar();
+//                                        }
+//                                    });
+//                        }
+//                        @Override
+//                        public void onBitmapFailed(Drawable errorDrawable) {}
+//                        @Override
+//                        public void onPrepareLoad(Drawable placeHolderDrawable) {}
+//                    });
 
 
             bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />")));
