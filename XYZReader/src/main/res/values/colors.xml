@@ -26,7 +26,7 @@
 
     <color name="colorPrimary">#4f2b26</color>
     <color name="colorPrimaryDark">#280100</color>
-    <color name="colorAccent">#7d544e</color>
+    <color name="colorAccent">#a79492</color>
     <color name="txtTitle">#F5F5F6</color>
     <color name="txtSubTitle">#E1E2E1</color>
 </resources>
